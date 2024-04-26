@@ -20,53 +20,125 @@ int main()
     {
         notebook[i].numeroNot = i + 1; // Números de notebook de 1 a 10
         notebook[i].isReservado = 0;   // Todos os notebooks estão inicialmente disponíveis
-        notebook[i].isRetirado = 0;     // Nenhum notebook foi retirado
-        notebook[i].isEstragado = 0;    // Nenhum notebook está estragado
-        notebook[i].raAluno = 0;        // Nenhum aluno atribuído inicialmente
+        notebook[i].isRetirado = 0;    // Nenhum notebook foi retirado
+        notebook[i].isEstragado = 0;   // Nenhum notebook está estragado
+        notebook[i].raAluno = 0;       // Nenhum aluno atribuído inicialmente
     }
-    // falando que um notebook esta estrago
+    // falando que um notebook esta estragado
     notebook[0].isEstragado = 1;
 
     // simulando que o notebook 3 e 6 estao reservados, e os r.a ficticio dos alunos
     notebook[3].isReservado = 1;
-    notebook[3].raAluno = 1234567;
+    notebook[3].raAluno = 12345;
     notebook[6].isReservado = 1;
-    notebook[6].isReservado = 7654321;
-
+    notebook[6].raAluno = 7654321;
 
     // Variáveis globais
     int isAdm;
 
     // Variáveis para controlar o sistema de ADM
-    int senhaAdmCorreta, tentarSenhaAdmNovamente, escolhaAdm;
+    int senhaAdmCorreta, tentarSenhaAdmNovamente, escolhaAdm,codigo_notebook,nota_funcionamento;
     char loginAdm[10], senhaAdm[10];
 
     // Variáveis para controlar o sistema de aluno
-    char loginAluno[10], senhaAluno[10];
+    int senhaAluno, tentarSenha = 1, raAluno;
 
     // Loop principal do programa
     do
     {
-        printf("------- BEM VINDO AO SISTEMA DE RESERVA DE NOTEBOOK \n");
+        printf("------- BEM VINDO AO SISTEMA DE RESERVA DE NOTEBOOK -------\n");
 
-        printf("Digite 0 para sair \n");
-        printf("Digite 1 para acessar como aluno e realizar sua reserva \n");
-        printf("Digite 2 para acessar como ADM e gerenciar as reservas \n");
+        printf("DIGITE 0 PARA SAIR \n");
+        printf("DIGITE 1 PARA ACESSAR AREA DO ALUNO E REALIZAR SUA RESERVA! \n");
+        printf("DIGITE 2 PARA ACESSAR O ADM E GERENCIAR AS RESERVAS. \n");
         scanf("%d", &isAdm);
 
         switch (isAdm)
         { // Verificando qual opção o usuário selecionou
-        case 0:
+        case 0: // para sair
             printf("\n \n Muito obrigado por usar o sistema de notebooks ");
             return 0;
             break;
 
-        case 1:
-            printf("Bem vindo à área de alunos do sistema de notebooks \n");
-            break;
+        case 1: // tela aluno
+        {
+            printf("Bem vindo a area de alunos do sistema de notebooks \n");
 
-        case 2:
-            printf("Bem vindo à área administrativa do sistema de notebooks \n");
+            while (tentarSenha == 1) // login
+            {
+                printf("Informe seu RA: \n");
+                scanf("%d", &raAluno);
+                printf("Insira a senha: \n");
+                scanf("%d", &senhaAluno);
+
+                // simulação de ra e senha
+                if (raAluno == 123456 && senhaAluno == 1234567)
+                {
+                    printf("Login bem sucedido!\n");
+
+                    // reservando os notebooks
+                    // verifica se ja reservou
+                    int alunoJaReservou = 0;
+                    int sair;
+                    for (int i = 0; i < quantNotebooks; i++)
+                    {
+                        if (notebook[i].raAluno == raAluno)
+                        {
+                            alunoJaReservou = 1;
+                            printf("Voce ja reservou um notebook, nao pode reservar outro!\n");
+                            printf("Digite 0 para sair.\n");
+                            scanf("%d", &sair);
+
+                            if(sair == 0){
+                                break;
+                            }
+                        }
+                    }
+                
+                    if (alunoJaReservou == 0)
+                    {
+                        printf("Notebooks disponiveis para reserva: \n");
+                        // nots disponiveis
+                        for (int i = 0; i < quantNotebooks; i++)
+                        {
+                            if (notebook[i].isReservado == 0 && notebook[i].isEstragado == 0)
+                            {
+                                printf("%d\n", notebook[i].numeroNot);
+                            }
+                        }
+                        int numeroNot;
+                        printf("Digite qual o numero do notebook que deseja reservar:");
+                        scanf("%d", &numeroNot);
+
+                        notebook[numeroNot - 1].isReservado = 1;
+                        notebook[numeroNot - 1].raAluno = raAluno;
+
+                        printf("Notebook %d reservado com sucesso para o aluno %d!\n", numeroNot, raAluno);
+                        break;
+                        
+                    }else{
+                        break;
+                    }
+                }
+                else
+                {
+                    printf("Login ou senha incorretos\n");
+                    printf("Digite 0 para sair e 1 para tentar novamente\n");
+                    scanf("%d", &tentarSenha);
+
+                    if (tentarSenha == 0)
+                    {
+                        break;
+                    }
+                    
+                }
+                
+            }
+        }
+        break;
+        case 2: // tela adm
+        {
+            printf("Bem vindo ha area administrativa do sistema de notebooks \n");
 
             do
             {
@@ -83,12 +155,12 @@ int main()
 
                     do
                     {
-                        printf("Digite 1 para verificar quantos notebooks estão disponíveis: \n");
-                        printf("Digite 2 para mostrar os dados dos alunos que pegaram os notebooks: \n");
-                        printf("Digite 3 para confirmar a retirada de um notebook: \n");
-                        printf("Digite 4 para confirmar a devolução de um notebook: \n");
-                        printf("Digite 5 para registrar notebook com defeito: \n");
-                        printf("Digite 6 para sair: \n");
+                        printf("\nDigite 1 para verificar quantos notebooks estao disponiveis: ");
+                        printf("\nDigite 2 para mostrar os dados dos alunos que pegaram os notebooks: ");
+                        printf("\nDigite 3 para confirmar a retirada de um notebook: ");
+                        printf("\nDigite 4 para confirmar a devolucao de um notebook: ");
+                        printf("\nDigite 5 para registrar notebook com defeito: ");
+                        printf("\nDigite 6 para sair: \n");
                         scanf("%d", &escolhaAdm);
 
                         switch (escolhaAdm)
@@ -100,15 +172,23 @@ int main()
                             {
                                 if (notebook[i].isReservado == 0 && notebook[i].isEstragado == 0)
                                 {
-                                    printf("Notebook %d disponível \n", notebook[i].numeroNot);
+                                    printf("Notebook %d disponivel \n", notebook[i].numeroNot);
                                 }
                             }
                             break;
 
                         case 2:
                             // Funcionalidade 2: Mostrar os dados dos alunos que pegaram os notebooks
-                            printf("Funcionalidade 2: Mostrar os dados dos alunos que pegaram os notebooks\n");
-                            // Implemente esta funcionalidade
+                            // Apos a implementação do banco de dados iremos adicionar o nome e as demais informações do aluno
+                            printf("\n------- Notebooks Reservados -------\n");
+                            for (int i = 0; i < quantNotebooks; i++)
+                            {
+                                if (notebook[i].isReservado == 1)
+                                {
+                                    printf("Notebook %d reservado", notebook[i].numeroNot);
+                                    printf(" pelo aluno %d\n", notebook[i].raAluno);
+                                }
+                            }
                             break;
 
                         case 3:
@@ -118,14 +198,77 @@ int main()
                             break;
 
                         case 4:
-                            // Funcionalidade 4: Confirmar a devolução de um notebook
-                            printf("Funcionalidade 4: Confirmar a devolução de um notebook\n");
-                            // Implemente esta funcionalidade
+                            printf("------- Devolucao de um notebook -------\n");
+
+                            printf("##### Notebooks reservados #####\n");
+                                for (int i = 0; i < quantNotebooks; i++) {
+                                    if (notebook[i].isReservado == 1) {
+                                        printf("Notebook %d\n", notebook[i].numeroNot);
+                                    }
+                                }
+                                printf("Escolha o codigo do notebook a ser devolvido: ");
+                                scanf("%d", &codigo_notebook);
+
+                                // Verificar se o notebook devolvido está reservado por algum aluno
+                                int notebookDevolvidoEncontrado = 0;
+                                for (int i = 0; i < quantNotebooks; i++) {
+                                    if (notebook[i].numeroNot == codigo_notebook && notebook[i].isReservado == 1) {
+                                        printf("##### Devolucao confirmada para o notebook de codigo %d. #####\n", codigo_notebook, nota_funcionamento);
+                                        // Liberar o notebook para reserva novamente
+                                        notebook[i].isReservado = 0;
+                                        notebook[i].raAluno = 0;
+                                        notebookDevolvidoEncontrado = 1;
+                                        break;
+                                    }
+                                }
+                                if (!notebookDevolvidoEncontrado) {
+                                    printf("O notebook de codigo %d nao estava reservado ou nao foi encontrado.\n", codigo_notebook);
+                                }
+
                             break;
+
+
 
                         case 5:
                             // Funcionalidade 5: Registrar notebook com defeito
-                            printf("Funcionalidade 5: Registrar notebook com defeito\n");
+                            for (int i = 1; i > 0; i++)
+                            {
+           
+                                printf("Selecione o Notebook com defeito\n");
+                                for (int j = 0; j < quantNotebooks; j++)
+                                {
+                                    if (notebook[j].isEstragado == 0)
+                                    {   
+                                        printf("Notebook %d\n", notebook[j].numeroNot);
+                                    }
+                                
+                                }
+                                int numeroNot;
+                                scanf("%d", &numeroNot);
+                                notebook[numeroNot - 1].isEstragado = 1;
+                                printf("O notebook %d foi registrado com defeito\n", numeroNot);
+                                int n;
+                                printf("Deseja continuar registrando notebook com defeito\n");
+                                printf("Digite 1 para sim\n");
+                                printf("Digite 2 para nao\n");
+                                scanf("%d", &n);
+                                switch (n)
+                                {
+                                case 1:
+                                    printf("Continue registrando os notebook\n");
+                                    break;
+                                case 2:
+                                    i = -1;
+                                    printf("Voce foi redirecionado para a home \n");
+                                break;
+                                default:
+                                    i = -1;
+                                    printf("Voce foi redirecionado para a home \n");
+                                    break;
+                                }
+                                
+                            
+                            }   
                             // Implemente esta funcionalidade
                             break;
 
@@ -152,14 +295,13 @@ int main()
                     senhaAdmCorreta = 0;
                 }
 
-            } while (senhaAdmCorreta == 0);
+            } while (senhaAdmCorreta == 0); // login
 
             break;
-
+        }
         default:
             break;
         }
-
     } while (isAdm != 0);
 
     return 0;
